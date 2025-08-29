@@ -20,6 +20,9 @@ def main():
 
     i = 1
     while i == 1:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
         screen.fill((0,0,0))
         pygame.display.flip()
 
