@@ -14,13 +14,18 @@ def main():
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
-    ###
+    
+    ### Initialize Pygame
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    i = 1
-    while i == 1:
+    ### Add frame rate
+    
+
+    ### Game While loop
+    while i == i:
         for event in pygame.event.get():
+            ## Close game
             if event.type == pygame.QUIT:
                 return
         screen.fill((0,0,0))
