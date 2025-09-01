@@ -2,9 +2,13 @@
 # the open-source pygame library
 # throughout this file
 import pygame
+import sys
 from  constants import *
-from player import *
+from player import Player
 from circle_shape import *
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
+from shot import Shot
 
 #pygame.init()
 #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -24,9 +28,23 @@ def main():
     ### Add frame rate
     clock = pygame.time.Clock()
     dt = 0
+    ### Create groups():
+    updatable_group = pygame.sprite.Group()
+    drawable_group = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
+
+    Player.containers = (updatable_group, drawable_group)
+    Asteroid.containers = (asteroids, updatable_group, drawable_group)
+    AsteroidField.containers = (updatable_group, )
+    Shot.containers = (shots, updatable_group, drawable_group)
+
+    ### Create field instance
+    field = AsteroidField()
 
     ### Initiate Player:
     player01 = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    
     
     ### Game While loop
     running = True
@@ -38,10 +56,27 @@ def main():
         ## create digital screen
         screen.fill((0,0,0))
         ## render player
-        player01.draw(screen)
+        updatable_group.update(dt)
+        # player01.update(dt) NOT NECESARY ANYMORE
+        # player01.draw(screen) NOT NECESARY ANYMORE
+        for drawable_object in drawable_group:
+            drawable_object.draw(screen)
+        # Shots...
+
+
+        for asteroid in asteroids:
+            if player01.check_collision(asteroid):
+                print("Game over!")
+                sys.exit() 
+
+            for shot in shots:
+                if asteroid.collides_with(shot):
+                    shot.kill()
+                    asteroid.split()
         ## render phisical screen
         pygame.display.flip()
         ## limit fps
         dt = clock.tick(60) / 1000
+        ## Check for colissions
 if __name__ == "__main__":
     main()
